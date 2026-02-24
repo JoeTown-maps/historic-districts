@@ -1,4 +1,5 @@
-## Maps of Historical Saint Joseph Missouri
+## Web Maps of Historical Saint Joseph Missouri
 
-Saint Joseph Missouri is an amazing place to live, work, or visit.  This site is dedicated to using maps to tell the story
-of St Joseph and to inform people about what St Joe has to offer.
+Saint Joseph Missouri is an amazing place to live, work, or visit.  Here are some web maps that focus on various topics.
+
+<a href="historicdistricts.html">Historic Districts and Properties</a>
