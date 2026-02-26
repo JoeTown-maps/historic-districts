@@ -41,13 +41,11 @@
             height: 100%;
             padding: 0;
             margin: 0;
-        }
         </style>
-        
         <style>
-            #map { height: calc(100vh - 175px); }  /* Adjust 120px based on header height */   
-        </style>   
-                
+            #map { height: calc(100vh - 175px); }  /* Adjust 120px based on header height */  
+            .ol-popup { width: 350px; } 
+        </style>  
         <title>Saint Joseph Historic Districts</title>
     </head>
     <body>
@@ -55,8 +53,7 @@
               <!-- <img src="path/to/your-logo.png" alt="Old Town North Neighborhood Association" style="height: 60px; margin-right: 15px;"> -->
               <h1 style="margin: 5px 0;">The Historic Districts of Saint Joseph, Missouri</h1>
               <p style="margin: 0; font-size: 14px;">© 2026 Walter Eis</p>
-        </div>	
-		
+        </div>			
         <div id="map">
             <div id="popup" class="ol-popup">
                 <a href="#" id="popup-closer" class="ol-popup-closer"></a>
