@@ -25,7 +25,7 @@ var map = new ol.Map({
     })
 });
 
-loadNarratives();
+
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
 map.getView().fit([-10580165.662344, 4820402.687848, -10537292.981766, 4845883.620645], map.getSize());
@@ -169,20 +169,11 @@ var featureOverlay = new ol.layer.Vector({
 var doHighlight = false;
 var doHover = false;
 
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
     var narrativeText = narratives[currentFeature.get('fid')] || 'No narrative available for this feature.';
-    popupText += '<tr>' + escapeHtml(narrativeText) + '</tr>';
-    /* for (var i = 0; i < currentFeatureKeys.length; i++) {
+    popupText += '<tr>' + narrativeText + '</tr>';
+    for (var i = 0; i < currentFeatureKeys.length; i++) {
         if (currentFeatureKeys[i] != 'geometry' && currentFeatureKeys[i] != 'layerObject' && currentFeatureKeys[i] != 'idO') {
             var popupField = '';
             if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "hidden field") {
@@ -221,9 +212,9 @@ function createPopupField(currentFeature, currentFeatureKeys, layer) {
 					popupField += (fieldValue != null ? autolinker.link(fieldValue.toLocaleString()) + '</td>' : '');
 				}
 			}
-            popupText += '<tr>' + currentFeature.get('fid') + " " + popupField + '</tr>';
+            popupText += '<tr>' + popupField + '</tr>';
         }
-    } */
+    }
 
     return popupText;
 }
