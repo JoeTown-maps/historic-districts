@@ -181,7 +181,7 @@ function escapeHtml(unsafe) {
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
     var narrativeText = narratives[currentFeature.get('fid')] || 'No narrative available for this feature.';
-    popupText += '<tr>' + escapeHtml(narrativeText) + '</tr>';
+    popupText += '<tr>' + narrativeText + '</tr>';
     /* for (var i = 0; i < currentFeatureKeys.length; i++) {
         if (currentFeatureKeys[i] != 'geometry' && currentFeatureKeys[i] != 'layerObject' && currentFeatureKeys[i] != 'idO') {
             var popupField = '';
