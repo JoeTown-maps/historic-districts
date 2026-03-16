@@ -1048,4 +1048,4 @@ map.on('singleclick', function() {
     var attributionControl = document.getElementsByClassName('bottom-attribution')[0];
     if (attributionControl) {
         bottomRightContainerDiv.appendChild(attributionControl);
-
+	}
