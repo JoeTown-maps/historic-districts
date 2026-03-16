@@ -982,13 +982,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function addMoreToggle() {
   document.querySelectorAll('#popup-content').forEach(function(content) {
     // Target the narrative text container (adjust selector if needed)
-    var narrative = content.querySelector('#popup-content'); // or more specific: content.innerHTML.match(/narrative/i)
+    var narrative = content.querySelector('li'); // or more specific: content.innerHTML.match(/narrative/i)
     if (!narrative) return;
 
     var fullText = narrative.innerHTML.trim();
-    if (fullText.length <= 200) return; // Skip short text
+    if (fullText.length <= 300) return; // Skip short text
 
-    var shortText = fullText.substring(0, 200) + '...';
+    var shortText = fullText.substring(0, 300) + '...';
 
     // Replace with truncated + link
     narrative.innerHTML = shortText + 
