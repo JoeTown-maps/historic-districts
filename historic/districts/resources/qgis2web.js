@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function addMoreToggle() {
   document.querySelectorAll('.ol-popup-content').forEach(function(content) {
     // Target the narrative text container (adjust selector if needed)
-    var narrative = content.querySelector('p, div, span'); // or more specific: content.innerHTML.match(/narrative/i)
+    var narrative = content.querySelector('#popup-content'); // or more specific: content.innerHTML.match(/narrative/i)
     if (!narrative) return;
 
     var fullText = narrative.innerHTML.trim();
