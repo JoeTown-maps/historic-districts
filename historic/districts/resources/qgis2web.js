@@ -127,7 +127,8 @@ var overlayPopup = new ol.Overlay({
 });
 map.addOverlay(overlayPopup)
     
-    
+addMoreToggle();
+
 var NO_POPUP = 0
 var ALL_FIELDS = 1
 
@@ -985,9 +986,9 @@ function addMoreToggle() {
     if (!narrative) return;
 
     var fullText = narrative.innerHTML.trim();
-    if (fullText.length <= 300) return; // Skip short text
+    if (fullText.length <= 200) return; // Skip short text
 
-    var shortText = fullText.substring(0, 300) + '...';
+    var shortText = fullText.substring(0, 200) + '...';
 
     // Replace with truncated + link
     narrative.innerHTML = shortText + 
