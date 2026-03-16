@@ -1010,4 +1010,40 @@ document.addEventListener('DOMContentLoaded', function() {
     var attributionControl = document.getElementsByClassName('bottom-attribution')[0];
     if (attributionControl) {
         bottomRightContainerDiv.appendChild(attributionControl);
-    }
+
+
+// Enhance popups with "More..." toggle for long narrative text
+function addMoreToggle() {
+  document.querySelectorAll('.ol-popup-content').forEach(function(content) {
+    // Target the narrative text container (adjust selector if needed)
+    var narrative = content.querySelector('p, div, span'); // or more specific: content.innerHTML.match(/narrative/i)
+    if (!narrative) return;
+
+    var fullText = narrative.innerHTML.trim();
+    if (fullText.length <= 300) return; // Skip short text
+
+    var shortText = fullText.substring(0, 300) + '...';
+
+    // Replace with truncated + link
+    narrative.innerHTML = shortText + 
+      ' <a href="#" class="more-toggle" style="color:#2980b9; cursor:pointer; text-decoration:underline;">More...</a>';
+
+    // Toggle handler
+    var toggleLink = narrative.querySelector('.more-toggle');
+    toggleLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (toggleLink.textContent === 'More...') {
+        narrative.innerHTML = fullText + 
+          ' <a href="#" class="more-toggle" style="color:#2980b9; cursor:pointer; text-decoration:underline;">Less</a>';
+      } else {
+        narrative.innerHTML = shortText + 
+          ' <a href="#" class="more-toggle" style="color:#2980b9; cursor:pointer; text-decoration:underline;">More...</a>';
+      }
+    });
+  });
+}
+
+// Run enhancement when popup opens (delay to let OL render)
+map.on('singleclick', function() {
+  setTimeout(addMoreToggle, 150); // Small delay for popup to appear
+});
