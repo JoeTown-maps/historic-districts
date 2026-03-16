@@ -17,3 +17,14 @@ body > :where(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, table):not(.is
   /* optionally: */
   /* padding-inline: 2rem; */   /* adjust side padding if you want more/less breathing room */
 }
+
+.more-toggle {
+  color: #2980b9;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.more-toggle:hover {
+  color: #1a5276;
+  text-decoration: underline;
+}
