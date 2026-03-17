@@ -242,7 +242,7 @@ function onPointerMove(evt) {
         } else {
             currentFeatureKeys = currentFeature.getKeys();
             if (doPopup) {
-                popupText += '<li><table>';
+                popupText += '<li id="narrative"><table>';
                 popupText += '<a>' + '<b>' + layer.get('popuplayertitle') + '</b>' + '</a>';
                 popupText += createPopupField(currentFeature, currentFeatureKeys, layer);
                 popupText += '</table></li>';
