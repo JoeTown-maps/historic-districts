@@ -182,7 +182,7 @@ function escapeHtml(unsafe) {
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
     var narrativeText = narratives[currentFeature.get('fid')] || 'No narrative available for this feature.';
-    popupText += '<tr id="narrative">' + marked.parse(narrativeText) + '</tr>';
+    popupText += '<tr>' + marked.parse(narrativeText) + '</tr>';
 
 
     return popupText;
@@ -233,7 +233,7 @@ function onPointerMove(evt) {
                 for(var n=0; n<clusteredFeatures.length; n++) {
                     currentFeature = clusteredFeatures[n];
                     currentFeatureKeys = currentFeature.getKeys();
-                    popupText += '<li><table>'
+                    popupText += '<li id="narrative"><table>'
                     popupText += '<a>' + '<b>' + layer.get('popuplayertitle') + '</b>' + '</a>';
                     popupText += createPopupField(currentFeature, currentFeatureKeys, layer);
                     popupText += '</table></li>';    
