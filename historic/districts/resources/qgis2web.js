@@ -182,7 +182,7 @@ function escapeHtml(unsafe) {
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
     var narrativeText = narratives[currentFeature.get('fid')] || 'No narrative available for this feature.';
-    popupText += '<tr>' + marked.parse(narrativeText) + '</tr>';
+    popupText += '<tr id="narrative">' + marked.parse(narrativeText) + '</tr>';
 
 
     return popupText;
@@ -974,7 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Enhance popups with "More..." toggle for long narrative text
 function addMoreToggle() {
-  document.querySelectorAll('#popup-content').forEach(function(content) {
+  document.querySelectorAll('#narrative').forEach(function(content) {
     // Target the narrative text container (adjust selector if needed)
     var narrative = content.querySelector('li'); // or more specific: content.innerHTML.match(/narrative/i)
     if (!narrative) return;
