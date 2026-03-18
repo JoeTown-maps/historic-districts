@@ -1,21 +1,4 @@
 
-// ────────────────────────────────────────────────
-// External narratives (loaded once)
-let narratives = {};
-
-async function loadNarratives() {
-  try {
-    const response = await fetch('./descriptions/descriptions.json');  // adjust path if needed
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    narratives = await response.json();
-    console.log('Narratives loaded');
-  } catch (err) {
-    console.error('Failed to load narratives.json:', err);
-  }
-}
-
 var map = new ol.Map({
     target: 'map',
     renderer: 'canvas',
@@ -25,7 +8,6 @@ var map = new ol.Map({
     })
 });
 
-loadNarratives();
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
 map.getView().fit([-10580165.662344, 4820402.687848, -10537292.981766, 4845883.620645], map.getSize());
@@ -170,21 +152,50 @@ var featureOverlay = new ol.layer.Vector({
 var doHighlight = false;
 var doHover = false;
 
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
-    var narrativeText = narratives[currentFeature.get('fid')] || 'No narrative available for this feature.';
-    popupText += '<tr> <div id="ntext">' + marked.parse(narrativeText) + '</div> </tr>';
-
-
+    for (var i = 0; i < currentFeatureKeys.length; i++) {
+        if (currentFeatureKeys[i] != 'geometry' && currentFeatureKeys[i] != 'layerObject' && currentFeatureKeys[i] != 'idO') {
+            var popupField = '';
+            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "hidden field") {
+                continue;
+            } else if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label - visible with data") {
+                if (currentFeature.get(currentFeatureKeys[i]) == null) {
+                    continue;
+                }
+            }
+            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label - always visible" ||
+                layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label - visible with data") {
+                popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + '</th><td>';
+            } else {
+                popupField += '<td colspan="2">';
+            }
+            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label - visible with data") {
+                if (currentFeature.get(currentFeatureKeys[i]) == null) {
+                    continue;
+                }
+            }
+            if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label - always visible" ||
+                layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label - visible with data") {
+                popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + '</strong><br />';
+            }
+            if (layer.get('fieldImages')[currentFeatureKeys[i]] != "ExternalResource") {
+				popupField += (currentFeature.get(currentFeatureKeys[i]) != null ? autolinker.link(currentFeature.get(currentFeatureKeys[i]).toLocaleString()) + '</td>' : '');
+			} else {
+				var fieldValue = currentFeature.get(currentFeatureKeys[i]);
+				if (/\.(gif|jpg|jpeg|tif|tiff|png|avif|webp|svg)$/i.test(fieldValue)) {
+					popupField += (fieldValue != null ? '<img src="images/' + fieldValue.replace(/[\\\/:]/g, '_').trim() + '" /></td>' : '');
+				} else if (/\.(mp4|webm|ogg|avi|mov|flv)$/i.test(fieldValue)) {
+					popupField += (fieldValue != null ? '<video controls><source src="images/' + fieldValue.replace(/[\\\/:]/g, '_').trim() + '" type="video/mp4">Il tuo browser non supporta il tag video.</video></td>' : '');
+				} else if (/\.(mp3|wav|ogg|aac|flac)$/i.test(fieldValue)) {
+                    popupField += (fieldValue != null ? '<audio controls><source src="images/' + fieldValue.replace(/[\\\/:]/g, '_').trim() + '" type="audio/mpeg">Il tuo browser non supporta il tag audio.</audio></td>' : '');
+                } else {
+					popupField += (fieldValue != null ? autolinker.link(fieldValue.toLocaleString()) + '</td>' : '');
+				}
+			}
+            popupText += '<tr>' + popupField + '</tr>';
+        }
+    }
     return popupText;
 }
 
@@ -234,18 +245,16 @@ function onPointerMove(evt) {
                     currentFeature = clusteredFeatures[n];
                     currentFeatureKeys = currentFeature.getKeys();
                     popupText += '<li id="narrative"><table>'
-                    //popupText += '<a>' + '<b>' + layer.get('popuplayertitle') + '</b>' + '</a>';
-                    popupText += createPopupField(currentFeature, currentFeatureKeys, layer);
+                    popupText += createNarrativePopup(currentFeature, currentFeatureKeys, layer);
                     popupText += '</table></li>';    
                 }
             }
         } else {
             currentFeatureKeys = currentFeature.getKeys();
             if (doPopup) {
-                popupText += '<li id="narrative"><table>';
-                //popupText += '<a>' + '<b>' + layer.get('popuplayertitle') + '</b>' + '</a>';
-                popupText +=  createPopupField(currentFeature, currentFeatureKeys, layer);
-                popupText += '</table></li>';
+                popupText += '<li id="narrative"><table>'
+                popupText += createNarrativePopup(currentFeature, currentFeatureKeys, layer);
+                popupText += '</table></li>';    
             }
         }
     }
@@ -372,19 +381,17 @@ function onSingleClickFeatures(evt) {
                     for(var n = 0; n < clusteredFeatures.length; n++) {
                         currentFeature = clusteredFeatures[n];
                         currentFeatureKeys = currentFeature.getKeys();
-                        popupText += '<li id="narrative"><table>';
-                        // popupText += '<a><b>' + layer.get('popuplayertitle') + '</b></a>';
-                        popupText += createPopupField(currentFeature, currentFeatureKeys, layer);
-                        popupText += '</table></li>';    
+						popupText += '<li id="narrative"><table>'
+						popupText += createNarrativePopup(currentFeature, currentFeatureKeys, layer);
+						popupText += '</table></li>';    
                     }
                 }
             } else {
                 currentFeatureKeys = currentFeature.getKeys();
                 if (doPopup) {
-                    popupText += '<li id="narrative"><table>';
-                    // popupText += '<a><b>' + layer.get('popuplayertitle') + '</b></a>';
-                    popupText += createPopupField(currentFeature, currentFeatureKeys, layer);
-                    popupText += '</table>';
+                    popupText += '<li id="narrative"><table>'
+                    popupText += createNarrativePopup(currentFeature, currentFeatureKeys, layer);
+                    popupText += '</table></li>';    
                 }
             }
         }
@@ -972,40 +979,6 @@ document.addEventListener('DOMContentLoaded', function() {
         bottomRightContainerDiv.appendChild(attributionControl);
 	}
 
-// Enhance popups with "More..." toggle for long narrative text
-function addMoreToggle() {
-  document.querySelectorAll('#narrative').forEach(function(content) {
-    // Target the narrative text container (adjust selector if needed)
-    var narrative = content.querySelector('#ntext'); // or more specific: content.innerHTML.match(/narrative/i)
-    if (!narrative) return;
 
-    var fullText = narrative.innerHTML.trim();
-    if (fullText.indexOf("<!--more-->") < 0) return; // Skip short text
 
-    var shortText = fullText.substring(0, fullText.indexOf("<!--more-->"));
 
-    // Replace with truncated + link
-    narrative.innerHTML = shortText + 
-      ' <a href="#" class="more-toggle" style="color:#2980b9; cursor:pointer; text-decoration:underline;">More...</a>';
-
-    // Toggle handler
-	content.addEventListener('click', function(e) {
-      if (e.target.classList.contains('more-toggle')) {
-        e.preventDefault();
-        if (e.target.textContent === 'More...') {
-          narrative.innerHTML = fullText + 
-            ' <a href="#" class="more-toggle">Less</a>';
-        } else {
-          narrative.innerHTML = shortText + 
-            ' <a href="#" class="more-toggle">More...</a>';
-        }
-      }
-    });
-  });
-}
-
-// Run enhancement when popup opens (delay to let OL render)
-map.on('singleclick', function() {
-  //setTimeout(addMoreToggle, 150); // Small delay for popup to appear
-  addMoreToggle();
-});
