@@ -2,7 +2,7 @@
 
 ### qgis2web.js
 
-In functions onPointerMove(evt) and onSingleClickFeatures(evt) :
+In functions onPointerMove(evt) and onSingleClickFeatures(evt) :  
 
 Replace every occurance of this:  
 `
@@ -20,7 +20,7 @@ popupText += '</table></li>';
 `
 
 ### index.html
-Right after `<body>`, paste:
+Right after `<body>`, paste:  
 `
         <div id="header" style="background-color: #2c3e50; color: white; padding: 10px; text-align: center; font-family: Arial, sans-serif;">
               <!-- <img src="path/to/your-logo.png" alt="Old Town North Neighborhood Association" style="height: 60px; margin-right: 15px;"> -->
@@ -28,7 +28,7 @@ Right after `<body>`, paste:
               <p style="margin: 0; font-size: 14px;">© 2026 Walter Eis</p>
 `
 
-Right before `</body>`, paste:
+Right before `</body>`, paste:  
 `
 		<script>
 			// Run enhancement when popup opens (delay to let OL render)
@@ -42,12 +42,12 @@ Right before `</body>`, paste:
         </div>  
  `
  
- In the `<body>` section, paste as the second `<script>` include:
+ In the `<body>` section, paste as the second `<script>` include:  
  `
  		<script src="/webmaps/narratives.js"></script>
  `
  
- In the `<head>` section, add:
+ In the `<head>` section, add:  
  `        <link rel="stylesheet" href="/webmaps/ol_custom.css">  
  `
  
